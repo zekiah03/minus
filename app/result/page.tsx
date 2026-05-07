@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import ScoreBar from '@/components/ScoreBar';
 import ScoreRadar from '@/components/ScoreRadar';
 import { computeResult } from '@/lib/scoring';
+import { contributeToTwin } from '@/lib/contribute';
 import type { DiagnosisResult } from '@/lib/types';
 
 const LEVEL_COLORS: Record<string, string> = {
@@ -33,6 +34,12 @@ export default function ResultPage() {
     }
     const r = computeResult(answers);
     setResult(r);
+    contributeToTwin('minus', {
+      type: r.type.name,
+      totalScore: r.totalScore,
+      categoryScores: r.categoryScores,
+      level: r.analysis.level,
+    });
     setTimeout(() => setVisible(true), 50);
   }, [router]);
 
