@@ -14,8 +14,7 @@ export default function QuizPage() {
   const category = CATEGORIES[catIndex];
   const qInCat = current - catIndex * 8;
   const answered = answers[current];
-  const totalAnswered = answers.filter((a) => a > 0).length;
-  const progressPct = (totalAnswered / 40) * 100;
+  const progressPct = (answers.filter((a) => a > 0).length / 40) * 100;
 
   function select(score: number) {
     const next = [...answers];
@@ -36,90 +35,103 @@ export default function QuizPage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col px-6 md:px-12 py-0">
+    <main className="min-h-screen flex flex-col px-6 md:px-12">
 
       {/* 上部バー */}
-      <div
-        className="flex items-center justify-between py-4 shrink-0"
-        style={{ borderBottom: '1px solid var(--rule)' }}
-      >
+      <div className="rule" />
+      <div className="flex items-center justify-between py-3 shrink-0">
         <p className="label-accent">{category.label}</p>
-        <p className="label" style={{ color: 'var(--text-dim)' }}>
-          {qInCat + 1}&thinsp;/&thinsp;8 &nbsp;&nbsp; {current + 1}&thinsp;/&thinsp;40
-        </p>
+        <p className="label">{qInCat + 1}&thinsp;/&thinsp;8 &nbsp; {current + 1}&thinsp;/&thinsp;40</p>
       </div>
 
       {/* プログレスバー */}
-      <div className="h-px shrink-0" style={{ background: 'var(--rule)' }}>
+      <div className="rule shrink-0">
         <div
-          className="h-px transition-all duration-500"
-          style={{ width: `${progressPct}%`, background: 'var(--accent)' }}
+          style={{
+            height: '1px',
+            width: `${progressPct}%`,
+            background: 'var(--accent)',
+            boxShadow: '0 0 4px rgba(122,0,0,0.4)',
+            transition: 'width 0.5s ease',
+          }}
         />
       </div>
 
-      {/* コンテンツ */}
-      <div className="flex-1 flex flex-col justify-between max-w-2xl py-10 md:py-16">
+      {/* 質問エリア */}
+      <div className="flex-1 flex flex-col justify-between max-w-xl py-10 md:py-14">
 
-        {/* 質問エリア */}
         <div key={current} className="reveal-up relative">
-          {/* バックグラウンド番号 */}
+          {/* 背景の番号 */}
           <span
-            className="absolute select-none pointer-events-none"
+            aria-hidden
+            className="font-display select-none pointer-events-none absolute"
             style={{
-              fontSize: 'clamp(80px, 18vw, 180px)',
+              fontSize: 'clamp(100px, 22vw, 200px)',
               lineHeight: 1,
-              color: 'var(--accent-subtle)',
-              top: '-0.15em',
-              left: '-0.05em',
-              fontWeight: 800,
+              color: 'rgba(122,0,0,0.055)',
+              top: '-0.1em',
+              left: '-0.04em',
+              fontWeight: 400,
               zIndex: 0,
             }}
           >
             {String(current + 1).padStart(2, '0')}
           </span>
-          <div className="relative" style={{ zIndex: 1, paddingTop: '1.5rem' }}>
-            <p
-              className="font-light leading-relaxed"
-              style={{
-                fontSize: 'clamp(1.15rem, 3vw, 1.6rem)',
-                color: 'var(--text)',
-                paddingLeft: '0.5rem',
-              }}
-            >
-              {question.text}
-            </p>
-          </div>
+
+          <p
+            className="relative"
+            style={{
+              zIndex: 1,
+              paddingTop: '2rem',
+              fontSize: 'clamp(1.1rem, 2.8vw, 1.55rem)',
+              color: 'var(--text)',
+              lineHeight: 1.8,
+              fontStyle: 'italic',
+            }}
+          >
+            {question.text}
+          </p>
         </div>
 
         {/* スケール */}
-        <div className="mt-10 md:mt-12">
+        <div className="mt-12">
           <div className="rule" />
           {([1, 2, 3, 4, 5] as const).map((score) => {
-            const isSelected = answered === score;
+            const sel = answered === score;
             return (
               <div key={score}>
                 <button
                   onClick={() => select(score)}
-                  className="w-full flex items-center gap-6 py-4 text-left transition-all duration-100 group"
-                  style={{ background: isSelected ? 'var(--accent-faint)' : 'transparent' }}
+                  className="w-full flex items-center gap-5 py-4 text-left transition-all duration-100"
+                  style={{ background: sel ? 'var(--accent-faint)' : 'transparent' }}
                 >
-                  {/* アクセントライン */}
                   <div
-                    className="h-4 shrink-0 transition-all duration-150"
                     style={{
                       width: '2px',
-                      background: isSelected ? 'var(--accent)' : 'var(--rule)',
+                      height: '1rem',
+                      background: sel ? 'var(--accent)' : 'var(--border)',
+                      boxShadow: sel ? '0 0 4px rgba(122,0,0,0.5)' : 'none',
+                      flexShrink: 0,
+                      transition: 'all 0.1s',
                     }}
                   />
                   <span
-                    className="font-mono text-xs shrink-0 w-4"
-                    style={{ color: isSelected ? 'var(--accent)' : 'var(--text-dim)' }}
+                    className="font-mono-label text-xs shrink-0"
+                    style={{
+                      color: sel ? 'var(--accent)' : 'var(--text-dim)',
+                      width: '1.5rem',
+                    }}
                   >
                     {String(score).padStart(2, '0')}
                   </span>
                   <span
-                    className="text-sm tracking-wide transition-colors duration-100"
-                    style={{ color: isSelected ? 'var(--text)' : 'var(--text-muted)' }}
+                    style={{
+                      fontSize: '0.85rem',
+                      color: sel ? 'var(--text)' : 'var(--text-muted)',
+                      letterSpacing: '0.04em',
+                      fontStyle: sel ? 'italic' : 'normal',
+                      transition: 'all 0.1s',
+                    }}
                   >
                     {SCALE_LABELS[score]}
                   </span>
@@ -135,32 +147,25 @@ export default function QuizPage() {
           <button
             onClick={goPrev}
             disabled={current === 0}
-            className="label transition-opacity hover:opacity-60"
-            style={{
-              color: 'var(--text-dim)',
-              opacity: current === 0 ? 0.2 : 1,
-              cursor: current === 0 ? 'default' : 'pointer',
-            }}
+            className="label transition-opacity hover:opacity-50"
+            style={{ opacity: current === 0 ? 0.15 : 0.6, cursor: current === 0 ? 'default' : 'pointer' }}
           >
             ← Prev
           </button>
-
           <button
             onClick={goNext}
             disabled={answered === 0}
-            className="px-6 py-3 text-xs font-medium tracking-widest uppercase transition-opacity duration-150"
+            className="label-accent transition-opacity"
             style={{
-              background: answered > 0 ? 'var(--accent)' : 'var(--surface2)',
-              color: answered > 0 ? 'var(--text)' : 'var(--text-dim)',
-              opacity: answered === 0 ? 0.35 : 1,
+              opacity: answered === 0 ? 0.2 : 1,
               cursor: answered === 0 ? 'not-allowed' : 'pointer',
             }}
           >
             {current === 39 ? 'Result →' : 'Next →'}
           </button>
         </div>
-      </div>
 
+      </div>
     </main>
   );
 }

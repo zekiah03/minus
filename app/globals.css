@@ -1,37 +1,44 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #030303;
-  --surface: #0a0404;
-  --surface2: #120606;
-  --border: #1e0c0c;
-  --text: #f0eded;
-  --text-muted: #7a6464;
-  --text-dim: #3a2424;
-  --accent: #c00000;
-  --accent-hover: #d91010;
-  --accent-subtle: #280606;
-  --accent-faint: #100303;
-  --rule: #1e0c0c;
-  --rule-accent: #c00000;
+  --bg: #010101;
+  --surface: #060202;
+  --surface2: #0c0404;
+  --border: #130707;
+  --text: #c4bbbb;
+  --text-muted: #4e3c3c;
+  --text-dim: #201010;
+  --accent: #7a0000;
+  --accent-hover: #960000;
+  --accent-subtle: #190303;
+  --accent-faint: #0b0202;
+  --rule: #130707;
+  --rule-accent: #7a0000;
 }
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
 }
 
-*, *::before, *::after { box-sizing: border-box; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
 body {
-  background: var(--bg);
+  background-color: var(--bg);
   color: var(--text);
-  font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  /* 明朝体 — 冷たく、形式的 */
+  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', Georgia, serif;
   -webkit-font-smoothing: antialiased;
+  animation: breathe 7s ease-in-out infinite;
 }
 
-/* フィルムグレイン */
+@keyframes breathe {
+  0%, 100% { background-color: #010101; }
+  50%       { background-color: #040101; }
+}
+
+/* フィルムグレイン（強め） */
 body::before {
   content: '';
   position: fixed;
@@ -39,43 +46,49 @@ body::before {
   width: 200%; height: 200%;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.04;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 180px 180px;
-  animation: grain 0.4s steps(1) infinite;
+  opacity: 0.062;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  animation: grain 0.35s steps(1) infinite;
 }
 
-/* ヴィネット */
+/* 重いヴィネット */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 9998;
-  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.65) 100%);
+  background: radial-gradient(ellipse at center,
+    transparent 35%,
+    rgba(0,0,0,0.55) 65%,
+    rgba(0,0,0,0.88) 100%
+  );
 }
 
 @keyframes grain {
-  0%   { transform: translate(0,0); }
-  10%  { transform: translate(-3%,-4%); }
-  20%  { transform: translate(-6%,2%); }
-  30%  { transform: translate(4%,-1%); }
-  40%  { transform: translate(-2%,5%); }
-  50%  { transform: translate(-5%,-3%); }
-  60%  { transform: translate(3%,4%); }
-  70%  { transform: translate(-1%,-6%); }
-  80%  { transform: translate(5%,1%); }
-  90%  { transform: translate(-3%,3%); }
-  100% { transform: translate(2%,-4%); }
+  0%   { transform: translate(0, 0); }
+  10%  { transform: translate(-4%, -3%); }
+  20%  { transform: translate(-7%, 3%); }
+  30%  { transform: translate(3%, -2%); }
+  40%  { transform: translate(-2%, 6%); }
+  50%  { transform: translate(-6%, -4%); }
+  60%  { transform: translate(4%, 3%); }
+  70%  { transform: translate(-2%, -7%); }
+  80%  { transform: translate(6%, 2%); }
+  90%  { transform: translate(-4%, 4%); }
+  100% { transform: translate(3%, -3%); }
 }
 
-::selection { background: var(--accent-subtle); color: var(--text); }
+/* ── フォント ─────────────────────────── */
+.font-display {
+  font-family: var(--font-display), 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+}
+.font-mono-label {
+  font-family: var(--font-mono), 'Courier New', monospace;
+}
 
-::-webkit-scrollbar { width: 2px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--accent-subtle); }
-
-/* ── ルール線 ───────────────────────────── */
+/* ── ルール ──────────────────────────── */
 .rule {
   width: 100%;
   height: 1px;
@@ -83,27 +96,30 @@ body::after {
 }
 .rule-accent {
   width: 100%;
-  height: 2px;
+  height: 1px;
   background: var(--rule-accent);
+  box-shadow: 0 0 6px rgba(122, 0, 0, 0.35);
 }
 
-/* ── ラベル ────────────────────────────── */
+/* ── ラベル ──────────────────────────── */
 .label {
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--text-dim);
 }
 .label-accent {
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--accent);
 }
 
-/* ── アニメーション ─────────────────────── */
+/* ── アニメーション ─────────────────── */
 @keyframes revealUp {
-  from { opacity: 0; transform: translateY(24px); }
+  from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes revealFade {
@@ -111,14 +127,24 @@ body::after {
   to   { opacity: 1; }
 }
 @keyframes flicker {
-  0%,100% { opacity: 1; }
-  92%     { opacity: 1; }
-  93%     { opacity: 0.82; }
-  94%     { opacity: 1; }
-  96%     { opacity: 0.88; }
-  97%     { opacity: 1; }
+  0%, 100% { opacity: 1; }
+  85%  { opacity: 1; }
+  86%  { opacity: 0.65; }
+  87%  { opacity: 1; }
+  91%  { opacity: 0.72; }
+  92%  { opacity: 1; }
+  95%  { opacity: 0.80; }
+  96%  { opacity: 1; }
 }
 
-.reveal-up   { animation: revealUp 0.6s cubic-bezier(0.16,1,0.3,1) forwards; }
-.reveal-fade { animation: revealFade 0.8s ease forwards; }
-.flicker     { animation: flicker 10s infinite; }
+.reveal-up   { animation: revealUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards; }
+.reveal-fade { animation: revealFade 1s ease forwards; }
+.flicker     { animation: flicker 12s infinite; }
+
+/* ── セレクション ───────────────────── */
+::selection { background: var(--accent-subtle); color: var(--text); }
+
+/* ── スクロールバー ─────────────────── */
+::-webkit-scrollbar { width: 1px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--accent-subtle); }

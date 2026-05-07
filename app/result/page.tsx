@@ -8,15 +8,20 @@ import ScoreRadar from '@/components/ScoreRadar';
 import { computeResult } from '@/lib/scoring';
 import type { DiagnosisResult } from '@/lib/types';
 
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
+function Row({ label, accent = false, children }: { label: string; accent?: boolean; children: React.ReactNode }) {
   return (
-    <div>
+    <>
       <div className="rule" />
-      <div className="py-5 flex flex-col gap-2">
-        <p className="label" style={{ color: 'var(--text-dim)' }}>{label}</p>
+      <div className="py-6">
+        <p
+          className={accent ? 'label-accent' : 'label'}
+          style={{ marginBottom: '1rem' }}
+        >
+          {label}
+        </p>
         {children}
       </div>
-    </div>
+    </>
   );
 }
 
@@ -31,13 +36,13 @@ export default function ResultPage() {
     const answers: number[] = JSON.parse(raw);
     if (answers.length !== 40 || answers.some((a) => a === 0)) { router.replace('/quiz'); return; }
     setResult(computeResult(answers));
-    setTimeout(() => setVis(true), 80);
+    setTimeout(() => setVis(true), 100);
   }, [router]);
 
   if (!result) {
     return (
       <main className="min-h-screen flex items-center justify-center">
-        <p className="label" style={{ color: 'var(--text-dim)' }}>集計中...</p>
+        <p className="label" style={{ color: 'var(--text-dim)' }}>——</p>
       </main>
     );
   }
@@ -47,125 +52,125 @@ export default function ResultPage() {
   return (
     <main
       className="min-h-screen px-6 md:px-12 py-10 md:py-14 max-w-2xl"
-      style={{ opacity: vis ? 1 : 0, transition: 'opacity 0.6s ease' }}
+      style={{ opacity: vis ? 1 : 0, transition: 'opacity 0.8s ease' }}
     >
 
-      {/* ── ヘッダー ─────────────────────────── */}
+      {/* ヘッダー */}
       <div className="rule" />
       <div className="flex items-center justify-between py-3">
-        <p className="label-accent">Diagnosis Result</p>
-        <p className="label" style={{ color: 'var(--text-dim)' }}>minus</p>
+        <p className="label-accent">判定</p>
+        <p className="label">{totalScore}&thinsp;/&thinsp;100 — {analysis.level}</p>
       </div>
-      <div className="rule" />
+      <div className="rule-accent" />
 
-      {/* ── タイプ名 ─────────────────────────── */}
-      <div className="py-10 md:py-14 reveal-up">
-        <p className="label mb-4" style={{ color: 'var(--text-dim)' }}>あなたのマイナスタイプ</p>
+      {/* タイプ名 */}
+      <div className="reveal-up" style={{ paddingTop: '3rem', paddingBottom: '2rem' }}>
+        <p className="label" style={{ marginBottom: '1.2rem', color: 'var(--text-dim)' }}>
+          あなたは——
+        </p>
         <h1
-          className="font-bold leading-none tracking-tighter"
-          style={{ fontSize: 'clamp(2.4rem, 8vw, 5rem)', color: 'var(--text)' }}
+          className="font-display"
+          style={{
+            fontSize: 'clamp(2.2rem, 9vw, 5.5rem)',
+            lineHeight: 1,
+            letterSpacing: '-0.02em',
+            color: 'var(--text)',
+          }}
         >
           {type.name}
         </h1>
-        <div className="rule-accent mt-5" />
       </div>
 
-      {/* ── スコア ───────────────────────────── */}
-      <div className="flex items-end justify-between py-6">
-        <div>
-          <p className="label mb-2" style={{ color: 'var(--text-dim)' }}>総合スコア</p>
-          <p
-            className="font-bold font-mono leading-none"
-            style={{ fontSize: 'clamp(3rem, 10vw, 6rem)', color: 'var(--text)' }}
-          >
-            {totalScore}
-            <span className="text-lg font-normal ml-1" style={{ color: 'var(--text-dim)' }}>/100</span>
-          </p>
-        </div>
-        <div
-          className="px-4 py-2 label-accent"
-          style={{ background: 'var(--accent-subtle)', border: '1px solid var(--accent)' }}
-        >
-          {analysis.level}
-        </div>
-      </div>
       <div className="rule" />
-
-      {/* ── タイプ説明 ──────────────────────── */}
-      <Row label="Type Description">
-        <p className="text-sm leading-loose" style={{ color: 'var(--text-muted)' }}>
+      <div className="py-6">
+        <p
+          style={{
+            fontSize: '0.9rem',
+            color: 'var(--text-muted)',
+            lineHeight: 1.9,
+            fontStyle: 'italic',
+          }}
+        >
           {type.description}
         </p>
-        <p className="text-xs leading-relaxed mt-2" style={{ color: 'var(--text-dim)', fontStyle: 'italic' }}>
+        <p
+          className="font-mono-label text-xs mt-4"
+          style={{ color: 'var(--text-dim)', lineHeight: 1.8 }}
+        >
           {type.theoreticalBasis}
         </p>
-      </Row>
+      </div>
 
-      {/* ── レーダーチャート ─────────────────── */}
-      <Row label="Category Radar">
+      {/* スコア詳細 */}
+      <Row label="Score Radar">
         <ScoreRadar scores={categoryScores} />
       </Row>
 
-      {/* ── 棒グラフ ─────────────────────────── */}
-      <Row label="Score Breakdown">
+      <Row label="Breakdown">
         <ScoreBar scores={categoryScores} />
       </Row>
 
-      {/* ── 核心領域 ─────────────────────────── */}
+      {/* 核心 */}
       <Row label="核心領域">
-        <p className="text-sm leading-loose" style={{ color: 'var(--text-muted)' }}>
+        <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.9, fontStyle: 'italic' }}>
           {analysis.coreDomainReading}
         </p>
       </Row>
 
-      {/* ── 耐性レベル ───────────────────────── */}
-      <Row label={`耐性レベル — ${analysis.level}`}>
-        <p className="text-sm leading-loose" style={{ color: 'var(--text-muted)' }}>
+      {/* 耐性レベル */}
+      <Row label={`耐性 — ${analysis.level}`}>
+        <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.9, fontStyle: 'italic' }}>
           {analysis.levelDescription}
         </p>
-        <p className="text-xs leading-relaxed mt-2" style={{ color: 'var(--text-dim)' }}>
+        <p className="font-mono-label text-xs mt-3" style={{ color: 'var(--text-dim)', lineHeight: 1.7 }}>
           {analysis.levelEthicalNote}
         </p>
       </Row>
 
-      {/* ── マイナスの裏面 ───────────────────── */}
-      <div>
+      {/* マイナスの裏面 */}
+      <>
         <div className="rule" />
-        <div className="py-5">
-          <p className="label-accent mb-4">マイナスの裏面</p>
-          <p className="text-sm leading-loose whitespace-pre-line" style={{ color: 'var(--text-muted)' }}>
+        <div className="py-6">
+          <p className="label-accent" style={{ marginBottom: '1rem' }}>マイナスの裏面</p>
+          <p
+            style={{
+              fontSize: '0.88rem',
+              color: 'var(--text-muted)',
+              lineHeight: 1.9,
+              fontStyle: 'italic',
+              whiteSpace: 'pre-line',
+            }}
+          >
             {analysis.positiveCoreReading}
           </p>
         </div>
         <div className="rule-accent" />
-      </div>
+      </>
 
-      {/* ── トリガー ─────────────────────────── */}
+      {/* トリガー */}
       <Row label="Trigger">
-        <p className="text-sm" style={{ color: 'var(--text-muted)' }}>{type.trigger}</p>
+        <p className="font-mono-label text-xs" style={{ color: 'var(--text-muted)', lineHeight: 1.8 }}>
+          {type.trigger}
+        </p>
       </Row>
 
-      {/* ── アクション ──────────────────────── */}
-      <div>
-        <div className="rule" />
-        <div className="flex items-center justify-between py-5 flex-wrap gap-4">
-          <Link href="/" className="label hover:opacity-60 transition-opacity" style={{ color: 'var(--text-dim)' }}>
-            ← Top
-          </Link>
-          <Link
-            href="/quiz"
-            onClick={() => sessionStorage.removeItem('minus_answers')}
-            className="px-6 py-3 text-xs font-medium tracking-widest uppercase transition-opacity hover:opacity-70"
-            style={{ background: 'var(--accent)', color: 'var(--text)' }}
-          >
-            もう一度診断する
-          </Link>
-        </div>
-        <div className="rule" />
-        <p className="label py-4" style={{ color: 'var(--text-dim)' }}>
-          結果はこのブラウザにのみ保存。外部送信なし。
-        </p>
+      {/* アクション */}
+      <div className="rule" />
+      <div className="flex items-center justify-between py-5 flex-wrap gap-4">
+        <Link href="/" className="label hover:opacity-50 transition-opacity">← Top</Link>
+        <Link
+          href="/quiz"
+          onClick={() => sessionStorage.removeItem('minus_answers')}
+          className="label-accent hover:opacity-60 transition-opacity"
+        >
+          もう一度 →
+        </Link>
       </div>
+      <div className="rule" />
+
+      <p className="label py-6" style={{ color: 'var(--text-dim)', opacity: 0.5 }}>
+        結果はこのブラウザにのみ存在する。
+      </p>
 
     </main>
   );

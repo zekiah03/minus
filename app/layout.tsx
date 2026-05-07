@@ -1,18 +1,28 @@
 import type { Metadata } from 'next';
-import { Geist } from 'next/font/google';
+import { DM_Serif_Display, Space_Mono } from 'next/font/google';
 import './globals.css';
 
-const geist = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
+const dmSerif = DM_Serif_Display({
+  weight: '400',
+  variable: '--font-display',
+  subsets: ['latin'],
+});
+
+const spaceMono = Space_Mono({
+  weight: ['400', '700'],
+  variable: '--font-mono',
+  subsets: ['latin'],
+});
 
 export const metadata: Metadata = {
-  title: 'minus — あなたの限界を知る',
-  description: '何が嫌いか、どこまで耐えられるか。マイナスから自分を読む自己分析ツール。',
+  title: 'minus',
+  description: '嫌いが、正体だ。',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ja" className={`${geist.variable} h-full`}>
-      <body className="min-h-full flex flex-col" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
+    <html lang="ja" className={`${dmSerif.variable} ${spaceMono.variable} h-full`}>
+      <body className="min-h-full flex flex-col">
         {children}
       </body>
     </html>
