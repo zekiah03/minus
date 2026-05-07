@@ -14,7 +14,7 @@ export default function Landing() {
           position: 'absolute',
           fontSize: 'clamp(280px, 60vw, 700px)',
           lineHeight: 1,
-          color: 'rgba(122,0,0,0.022)',
+          color: 'rgba(194,0,0,0.012)',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -52%)',
@@ -25,15 +25,18 @@ export default function Landing() {
         −
       </span>
 
-      {/* 上部ラベル */}
+      {/* 上部ラベル行 */}
       <div style={{ position: 'relative', zIndex: 1 }} className="reveal-fade">
         <div className="rule" />
-        <p className="label-accent py-3">Self-Diagnosis</p>
+        <div className="flex items-center justify-between py-3">
+          <p className="label-accent">Self-Diagnosis</p>
+          <p className="label">SYS_MINUS</p>
+        </div>
         <div className="rule" />
       </div>
 
-      {/* タイトル */}
-      <div style={{ position: 'relative', zIndex: 1 }} className="py-4 reveal-up">
+      {/* ヒーロー */}
+      <div style={{ position: 'relative', zIndex: 1 }} className="reveal-up">
         <h1
           className="glitch-title font-display"
           style={{
@@ -47,14 +50,13 @@ export default function Landing() {
           minus
         </h1>
         <div className="rule-accent mt-4" />
-
         <p
-          className="mt-8"
+          className="mt-6 text-right"
           style={{
-            fontSize: 'clamp(1.05rem, 2.4vw, 1.4rem)',
+            fontSize: 'clamp(1rem, 2.2vw, 1.35rem)',
             color: 'var(--text-muted)',
             fontStyle: 'italic',
-            lineHeight: 1.8,
+            lineHeight: 1.7,
           }}
         >
           嫌いが、正体だ。
@@ -71,9 +73,20 @@ export default function Landing() {
           <p className="label">40 questions · 5 domains · 10 min</p>
           <Link
             href="/intro"
-            className="label-accent hover:opacity-60 transition-opacity duration-300 inline-flex items-center gap-3"
+            transitionTypes={['nav-forward']}
+            className="label-accent hover:opacity-70 transition-opacity duration-200 inline-flex items-center gap-3"
           >
-            診断を始める <span>→</span>
+            <span
+              style={{
+                display: 'block',
+                width: '2px',
+                height: '0.9rem',
+                background: 'var(--accent)',
+                boxShadow: '0 0 10px rgba(194,0,0,0.8)',
+                flexShrink: 0,
+              }}
+            />
+            診断を始める →
           </Link>
         </div>
         <div className="rule" />

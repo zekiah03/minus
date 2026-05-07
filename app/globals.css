@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #010101;
-  --surface: #060202;
-  --surface2: #0c0404;
-  --border: #130707;
-  --text: #c4bbbb;
-  --text-muted: #4e3c3c;
-  --text-dim: #201010;
-  --accent: #7a0000;
-  --accent-hover: #960000;
-  --accent-subtle: #190303;
-  --accent-faint: #0b0202;
-  --rule: #130707;
-  --rule-accent: #7a0000;
+  --bg: #000000;
+  --surface: #080202;
+  --surface2: #0e0404;
+  --border: #1c0e0e;
+  --text: #dbdbdb;
+  --text-muted: #704040;
+  --text-dim: #2d1a1a;
+  --accent: #c20000;
+  --accent-hover: #e00000;
+  --accent-subtle: #1a0404;
+  --accent-faint: #0f0202;
+  --rule: #1c0e0e;
+  --rule-accent: #c20000;
 }
 
 @theme inline {
@@ -29,11 +29,11 @@ body {
   color: var(--text);
   font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', Georgia, serif;
   -webkit-font-smoothing: antialiased;
-  animation: breathe 7s ease-in-out infinite;
+  animation: breathe 8s ease-in-out infinite;
 }
 
 @keyframes breathe {
-  0%, 100% { background-color: #010101; }
+  0%, 100% { background-color: #000000; }
   50%       { background-color: #040101; }
 }
 
@@ -48,8 +48,8 @@ html::after {
     0deg,
     transparent,
     transparent 3px,
-    rgba(0, 0, 0, 0.04) 3px,
-    rgba(0, 0, 0, 0.04) 4px
+    rgba(0, 0, 0, 0.05) 3px,
+    rgba(0, 0, 0, 0.05) 4px
   );
 }
 
@@ -61,13 +61,13 @@ body::before {
   width: 200%; height: 200%;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.085;
+  opacity: 0.09;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 160px 160px;
   animation: grain 0.35s steps(1) infinite;
 }
 
-/* 重いヴィネット（赤み帯び） */
+/* 赤みヴィネット */
 body::after {
   content: '';
   position: fixed;
@@ -76,8 +76,8 @@ body::after {
   z-index: 9998;
   background: radial-gradient(ellipse at center,
     transparent 28%,
-    rgba(0,0,0,0.62) 60%,
-    rgba(5,0,0,0.95) 100%
+    rgba(0,0,0,0.65) 62%,
+    rgba(4,0,0,0.97) 100%
   );
 }
 
@@ -93,6 +93,16 @@ body::after {
   80%  { transform: translate(6%, 2%); }
   90%  { transform: translate(-4%, 4%); }
   100% { transform: translate(3%, -3%); }
+}
+
+/* 署名ライン */
+.sig-line {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 12px rgba(194,0,0,0.8), 0 0 24px rgba(194,0,0,0.3);
+  z-index: 9996;
 }
 
 /* ── フォント ─────────────────────────── */
@@ -113,7 +123,7 @@ body::after {
   width: 100%;
   height: 1px;
   background: var(--rule-accent);
-  box-shadow: 0 0 6px rgba(122, 0, 0, 0.35);
+  box-shadow: 0 0 8px rgba(194,0,0,0.45);
 }
 
 /* ── ラベル ──────────────────────────── */
@@ -131,10 +141,8 @@ body::after {
   text-transform: uppercase;
   color: var(--accent);
 }
-
-/* リンク・ボタンの label-accent は暗背景でも視認できるよう微かに光らせる */
 a.label-accent, button.label-accent {
-  text-shadow: 0 0 12px rgba(122, 0, 0, 0.7), 0 0 28px rgba(122, 0, 0, 0.3);
+  text-shadow: 0 0 14px rgba(194,0,0,0.8), 0 0 32px rgba(194,0,0,0.35);
 }
 
 /* ── アニメーション ─────────────────── */
@@ -149,44 +157,46 @@ a.label-accent, button.label-accent {
 @keyframes flicker {
   0%, 100% { opacity: 1; }
   85%  { opacity: 1; }
-  86%  { opacity: 0.65; }
+  86%  { opacity: 0.55; }
   87%  { opacity: 1; }
-  91%  { opacity: 0.72; }
+  91%  { opacity: 0.68; }
   92%  { opacity: 1; }
-  95%  { opacity: 0.80; }
+  95%  { opacity: 0.78; }
   96%  { opacity: 1; }
 }
 
 /* ── グリッチ ────────────────────────── */
 @keyframes glitch {
-  0%, 87%, 100% { text-shadow: none; transform: none; }
-  88% { text-shadow: -5px 0 rgba(122,0,0,0.95), 5px 0 rgba(180,0,0,0.4); transform: none; }
-  89% { text-shadow: 5px 0 rgba(122,0,0,0.95), -5px 0 rgba(180,0,0,0.4); transform: skewX(-1.5deg) translateX(2px); }
-  90% { text-shadow: none; transform: none; }
-  92% { text-shadow: 3px 0 rgba(122,0,0,0.55); transform: translateX(3px); }
-  93% { text-shadow: none; transform: none; }
+  0%, 81%, 100% { text-shadow: none; transform: none; }
+  82%   { text-shadow: -7px 0 rgba(194,0,0,0.95), 7px 0 rgba(255,60,60,0.4); }
+  83%   { text-shadow: 7px 0 rgba(194,0,0,0.95), -5px 0 rgba(255,60,60,0.4); transform: skewX(-2deg) translateX(4px); }
+  83.4% { text-shadow: none; transform: none; }
+  85%   { text-shadow: 5px 0 rgba(194,0,0,0.5); transform: translateX(4px) skewX(0.5deg); }
+  85.4% { text-shadow: none; transform: none; }
+  91%   { text-shadow: -3px 0 rgba(194,0,0,0.4); transform: translateX(-2px); }
+  91.2% { text-shadow: none; transform: none; }
 }
-
 .glitch-title {
-  animation: flicker 12s infinite, glitch 9s infinite;
+  animation: flicker 10s infinite, glitch 7s infinite;
 }
 
-/* ── ホラー遷移（クイズ質問） ────────── */
-@keyframes horrorReveal {
-  0%   { opacity: 0; transform: translateY(10px); }
-  4%   { opacity: 0.7; transform: translateY(1px); }
-  5%   { opacity: 0.06; }
+/* ── 質問ブリード遷移 ────────────────── */
+@keyframes bleedIn {
+  0%   { opacity: 0; transform: translateY(12px); filter: blur(1.5px); }
+  3%   { opacity: 0.9; filter: blur(0); }
+  4%   { opacity: 0.04; transform: translateY(3px); }
   7%   { opacity: 1; transform: translateY(0); }
   100% { opacity: 1; }
 }
-.horror-reveal { animation: horrorReveal 0.6s cubic-bezier(0.16,1,0.3,1) forwards; }
+.bleed-in    { animation: bleedIn 0.55s cubic-bezier(0.16,1,0.3,1) forwards; }
+.horror-reveal { animation: bleedIn 0.55s cubic-bezier(0.16,1,0.3,1) forwards; }
 
 /* ── 赤フラッシュ ────────────────────── */
 @keyframes flashRed {
-  0%   { opacity: 0.18; }
+  0%   { opacity: 0.25; }
   100% { opacity: 0; }
 }
-.flash-red { animation: flashRed 0.4s ease-out forwards; }
+.flash-red { animation: flashRed 0.38s ease-out forwards; }
 
 /* ── タイプライターカーソル ──────────── */
 @keyframes cursorBlink {
@@ -195,36 +205,61 @@ a.label-accent, button.label-accent {
 }
 .cursor-blink {
   display: inline-block;
-  animation: cursorBlink 0.75s step-end infinite;
+  animation: cursorBlink 0.7s step-end infinite;
   color: var(--accent);
 }
 
 /* ── スキャン点滅 ───────────────────── */
 @keyframes scanPulse {
-  0%, 100% { opacity: 0.25; }
+  0%, 100% { opacity: 0.18; }
   50%       { opacity: 1; }
 }
-.scan-text { animation: scanPulse 1.6s ease-in-out infinite; }
+.scan-text { animation: scanPulse 1.4s ease-in-out infinite; }
+
+/* ── プロセスライン遅延表示 ──────────── */
+@keyframes processLine {
+  from { opacity: 0; transform: translateX(-4px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
 
 .reveal-up   { animation: revealUp 0.8s cubic-bezier(0.16,1,0.3,1) both; }
 .reveal-fade { animation: revealFade 1s ease both; }
-.flicker     { animation: flicker 12s infinite; }
+.flicker     { animation: flicker 10s infinite; }
 
-/* アニメーション無効環境では即座に表示 */
+/* ── View Transitions ─────────────── */
+::view-transition-old(root) {
+  animation: 200ms ease-in both vt-out;
+}
+::view-transition-new(root) {
+  animation: 350ms ease-out 160ms both vt-in;
+}
+@keyframes vt-out {
+  to { opacity: 0; filter: blur(4px); transform: scale(0.99); }
+}
+@keyframes vt-in {
+  from { opacity: 0; filter: blur(4px); transform: translateY(8px) scale(1.005); }
+}
+
+/* アニメーション無効環境 */
 @media (prefers-reduced-motion: reduce) {
-  .reveal-up, .reveal-fade, .horror-reveal {
+  .reveal-up, .reveal-fade, .bleed-in, .horror-reveal {
     animation: none;
     opacity: 1;
     transform: none;
   }
   .glitch-title, .flicker { animation: none; }
-  .scan-text { animation: none; opacity: 1; }
+  .scan-text  { animation: none; opacity: 1; }
+  .cursor-blink { animation: none; opacity: 1; }
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
 }
 
-/* ── セレクション ───────────────────── */
+/* ── セレクション / スクロールバー ─── */
 ::selection { background: var(--accent-subtle); color: var(--text); }
-
-/* ── スクロールバー ─────────────────── */
 ::-webkit-scrollbar { width: 1px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--accent-subtle); }

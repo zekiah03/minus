@@ -23,6 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ja" className={`${dmSerif.variable} ${spaceMono.variable} h-full`}>
       <body className="min-h-full flex flex-col">
+        <div className="sig-line" />
         {children}
       </body>
     </html>

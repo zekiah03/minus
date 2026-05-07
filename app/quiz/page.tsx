@@ -23,7 +23,7 @@ export default function QuizPage() {
     setAnswers(next);
     if (score === 5) {
       setFlash(true);
-      setTimeout(() => setFlash(false), 420);
+      setTimeout(() => setFlash(false), 380);
     }
   }
 
@@ -40,7 +40,7 @@ export default function QuizPage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col px-6 md:px-12">
+    <main className="min-h-screen flex flex-col">
 
       {/* スコア5選択時の赤フラッシュ */}
       {flash && (
@@ -49,7 +49,7 @@ export default function QuizPage() {
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(122,0,0,1)',
+            background: 'rgba(194,0,0,1)',
             pointerEvents: 'none',
             zIndex: 9996,
           }}
@@ -57,46 +57,46 @@ export default function QuizPage() {
       )}
 
       {/* 上部バー */}
-      <div className="rule" />
-      <div className="flex items-center justify-between py-3 shrink-0">
-        <p className="label-accent">{category.label}</p>
-        <p className="label">{qInCat + 1}&thinsp;/&thinsp;8 &nbsp; {current + 1}&thinsp;/&thinsp;40</p>
+      <div className="px-6 md:px-12 shrink-0">
+        <div className="rule" />
+        <div className="flex items-center justify-between py-3">
+          <p className="label-accent">{category.label}</p>
+          <p className="label">{qInCat + 1}&thinsp;/&thinsp;8 &nbsp; {current + 1}&thinsp;/&thinsp;40</p>
+        </div>
+        {/* プログレスバー */}
+        <div style={{ height: '1px', background: 'var(--rule)' }}>
+          <div
+            style={{
+              height: '1px',
+              width: `${progressPct}%`,
+              background: 'var(--accent)',
+              boxShadow: '0 0 6px rgba(194,0,0,0.5)',
+              transition: 'width 0.5s ease',
+            }}
+          />
+        </div>
       </div>
 
-      {/* プログレスバー */}
-      <div className="rule shrink-0">
-        <div
-          style={{
-            height: '1px',
-            width: `${progressPct}%`,
-            background: 'var(--accent)',
-            boxShadow: '0 0 6px rgba(122,0,0,0.5)',
-            transition: 'width 0.5s ease',
-          }}
-        />
-      </div>
+      {/* 質問 + スケール */}
+      <div className="flex-1 flex flex-col justify-between py-10 md:py-14">
 
-      {/* 質問エリア */}
-      <div className="flex-1 flex flex-col justify-between max-w-xl py-10 md:py-14">
-
-        <div key={current} className="horror-reveal relative">
-          {/* 背景の番号 */}
+        {/* 質問テキスト */}
+        <div key={current} className="bleed-in px-6 md:px-12 relative">
           <span
             aria-hidden
             className="font-display select-none pointer-events-none absolute"
             style={{
               fontSize: 'clamp(100px, 22vw, 200px)',
               lineHeight: 1,
-              color: 'rgba(122,0,0,0.055)',
+              color: 'rgba(194,0,0,0.04)',
               top: '-0.1em',
-              left: '-0.04em',
+              left: 'calc(1.5rem - 0.04em)',
               fontWeight: 400,
               zIndex: 0,
             }}
           >
             {String(current + 1).padStart(2, '0')}
           </span>
-
           <p
             className="relative"
             style={{
@@ -112,33 +112,33 @@ export default function QuizPage() {
           </p>
         </div>
 
-        {/* スケール */}
-        <div className="mt-12">
-          <div className="rule" />
+        {/* スケール — フル幅ロウ */}
+        <div className="-mx-6 md:-mx-12 mt-8">
+          <div className="rule mx-6 md:mx-12" />
           {([1, 2, 3, 4, 5] as const).map((score) => {
             const sel = answered === score;
             return (
               <div key={score}>
                 <button
                   onClick={() => select(score)}
-                  className="w-full flex items-center gap-5 py-4 text-left transition-all duration-100"
-                  style={{ background: sel ? 'var(--accent-faint)' : 'transparent' }}
+                  className="w-full flex items-center gap-5 text-left px-6 md:px-12"
+                  style={{
+                    paddingTop: '1.15rem',
+                    paddingBottom: '1.15rem',
+                    background: sel ? 'rgba(194,0,0,0.07)' : 'transparent',
+                    borderLeft: `2px solid ${sel ? 'var(--accent)' : 'transparent'}`,
+                    transition: 'background 0.1s ease, border-color 0.1s ease',
+                    cursor: 'pointer',
+                  }}
                 >
-                  <div
-                    style={{
-                      width: '2px',
-                      height: '1rem',
-                      background: sel ? 'var(--accent)' : 'var(--border)',
-                      boxShadow: sel ? '0 0 6px rgba(122,0,0,0.6)' : 'none',
-                      flexShrink: 0,
-                      transition: 'all 0.1s',
-                    }}
-                  />
                   <span
-                    className="font-mono-label text-xs shrink-0"
+                    className="font-mono-label shrink-0"
                     style={{
+                      fontSize: '0.6rem',
+                      letterSpacing: '0.15em',
                       color: sel ? 'var(--accent)' : 'var(--text-dim)',
                       width: '1.5rem',
+                      transition: 'color 0.1s',
                     }}
                   >
                     {String(score).padStart(2, '0')}
@@ -149,20 +149,20 @@ export default function QuizPage() {
                       color: sel ? 'var(--text)' : 'var(--text-muted)',
                       letterSpacing: '0.04em',
                       fontStyle: sel ? 'italic' : 'normal',
-                      transition: 'all 0.1s',
+                      transition: 'color 0.1s, font-style 0.1s',
                     }}
                   >
                     {SCALE_LABELS[score]}
                   </span>
                 </button>
-                <div className="rule" />
+                <div className="rule mx-6 md:mx-12" />
               </div>
             );
           })}
         </div>
 
         {/* ナビゲーション */}
-        <div className="flex items-center justify-between pt-6">
+        <div className="flex items-center justify-between px-6 md:px-12 pt-6">
           <button
             onClick={goPrev}
             disabled={current === 0}
