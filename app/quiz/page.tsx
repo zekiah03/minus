@@ -40,9 +40,9 @@ export default function QuizPage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col">
+    /* main has px padding — answer rows break out with -mx-6 md:-mx-12 */
+    <main className="min-h-screen flex flex-col px-6 md:px-12 overflow-x-hidden">
 
-      {/* スコア5選択時の赤フラッシュ */}
       {flash && (
         <div
           className="flash-red"
@@ -57,20 +57,19 @@ export default function QuizPage() {
       )}
 
       {/* 上部バー */}
-      <div className="px-6 md:px-12 shrink-0">
+      <div className="shrink-0">
         <div className="rule" />
         <div className="flex items-center justify-between py-3">
           <p className="label-accent">{category.label}</p>
           <p className="label">{qInCat + 1}&thinsp;/&thinsp;8 &nbsp; {current + 1}&thinsp;/&thinsp;40</p>
         </div>
-        {/* プログレスバー */}
         <div style={{ height: '1px', background: 'var(--rule)' }}>
           <div
             style={{
               height: '1px',
               width: `${progressPct}%`,
               background: 'var(--accent)',
-              boxShadow: '0 0 6px rgba(194,0,0,0.5)',
+              boxShadow: '0 0 8px rgba(194,0,0,0.6)',
               transition: 'width 0.5s ease',
             }}
           />
@@ -81,16 +80,16 @@ export default function QuizPage() {
       <div className="flex-1 flex flex-col justify-between py-10 md:py-14">
 
         {/* 質問テキスト */}
-        <div key={current} className="bleed-in px-6 md:px-12 relative">
+        <div key={current} className="bleed-in relative">
           <span
             aria-hidden
             className="font-display select-none pointer-events-none absolute"
             style={{
               fontSize: 'clamp(100px, 22vw, 200px)',
               lineHeight: 1,
-              color: 'rgba(194,0,0,0.04)',
+              color: 'rgba(194,0,0,0.045)',
               top: '-0.1em',
-              left: 'calc(1.5rem - 0.04em)',
+              left: '-0.04em',
               fontWeight: 400,
               zIndex: 0,
             }}
@@ -112,7 +111,7 @@ export default function QuizPage() {
           </p>
         </div>
 
-        {/* スケール — フル幅ロウ */}
+        {/* スケール — -mx でフル幅に突き出す */}
         <div className="-mx-6 md:-mx-12 mt-8">
           <div className="rule mx-6 md:mx-12" />
           {([1, 2, 3, 4, 5] as const).map((score) => {
@@ -123,11 +122,11 @@ export default function QuizPage() {
                   onClick={() => select(score)}
                   className="w-full flex items-center gap-5 text-left px-6 md:px-12"
                   style={{
-                    paddingTop: '1.15rem',
-                    paddingBottom: '1.15rem',
-                    background: sel ? 'rgba(194,0,0,0.07)' : 'transparent',
-                    borderLeft: `2px solid ${sel ? 'var(--accent)' : 'transparent'}`,
-                    transition: 'background 0.1s ease, border-color 0.1s ease',
+                    paddingTop: '1.2rem',
+                    paddingBottom: '1.2rem',
+                    background: sel ? 'rgba(194,0,0,0.08)' : 'transparent',
+                    borderLeft: `3px solid ${sel ? 'var(--accent)' : 'transparent'}`,
+                    transition: 'background 0.08s ease, border-color 0.08s ease',
                     cursor: 'pointer',
                   }}
                 >
@@ -138,7 +137,7 @@ export default function QuizPage() {
                       letterSpacing: '0.15em',
                       color: sel ? 'var(--accent)' : 'var(--text-dim)',
                       width: '1.5rem',
-                      transition: 'color 0.1s',
+                      transition: 'color 0.08s',
                     }}
                   >
                     {String(score).padStart(2, '0')}
@@ -149,7 +148,7 @@ export default function QuizPage() {
                       color: sel ? 'var(--text)' : 'var(--text-muted)',
                       letterSpacing: '0.04em',
                       fontStyle: sel ? 'italic' : 'normal',
-                      transition: 'color 0.1s, font-style 0.1s',
+                      transition: 'color 0.08s',
                     }}
                   >
                     {SCALE_LABELS[score]}
@@ -162,7 +161,7 @@ export default function QuizPage() {
         </div>
 
         {/* ナビゲーション */}
-        <div className="flex items-center justify-between px-6 md:px-12 pt-6">
+        <div className="flex items-center justify-between pt-6">
           <button
             onClick={goPrev}
             disabled={current === 0}
