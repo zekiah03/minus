@@ -22,6 +22,8 @@ export interface MinusType {
   name: string;
   description: string;
   trigger: string;
+  positiveCore: string; // マイナスの裏面——このタイプが示す肯定的な核心
+  theoreticalBasis: string; // 理論的根拠の一文
 }
 
 export type ToleranceLevel = '鈍感域' | '標準域' | '敏感域' | '過敏域';
@@ -29,9 +31,11 @@ export type ToleranceLevel = '鈍感域' | '標準域' | '敏感域' | '過敏�
 export interface Analysis {
   mostSensitive: CategoryScore;
   leastSensitive: CategoryScore;
-  pattern: string;
+  coreDomainReading: string; // 最高領域の理論的解釈
+  positiveCoreReading: string; // マイナスの裏面（肯定的読み替え）
   level: ToleranceLevel;
   levelDescription: string;
+  levelEthicalNote: string; // 倫理的フレーミング（弱さではなく意味として）
 }
 
 export interface DiagnosisResult {
