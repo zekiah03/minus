@@ -1,35 +1,27 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #050505;
-  --surface: #0d0606;
-  --surface2: #140808;
-  --border: #231212;
-  --border-dim: #160c0c;
-  --text: #ddd0d0;
-  --text-muted: #7a6666;
-  --text-dim: #3d2a2a;
-  --accent: #8b1c1c;
-  --accent-hover: #a82222;
-  --accent-subtle: #2d0a0a;
-  --accent-faint: #1a0505;
+  --bg: #030303;
+  --surface: #0a0404;
+  --surface2: #120606;
+  --border: #1e0c0c;
+  --text: #f0eded;
+  --text-muted: #7a6464;
+  --text-dim: #3a2424;
+  --accent: #c00000;
+  --accent-hover: #d91010;
+  --accent-subtle: #280606;
+  --accent-faint: #100303;
+  --rule: #1e0c0c;
+  --rule-accent: #c00000;
 }
 
 @theme inline {
-  --color-bg: var(--bg);
-  --color-surface: var(--surface);
-  --color-surface2: var(--surface2);
-  --color-border: var(--border);
-  --color-text: var(--text);
-  --color-text-muted: var(--text-muted);
-  --color-text-dim: var(--text-dim);
-  --color-accent: var(--accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-* { box-sizing: border-box; }
-
+*, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 
 body {
@@ -37,37 +29,20 @@ body {
   color: var(--text);
   font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
   -webkit-font-smoothing: antialiased;
-  position: relative;
 }
 
 /* フィルムグレイン */
 body::before {
   content: '';
   position: fixed;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.038;
+  opacity: 0.04;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 180px 180px;
   animation: grain 0.4s steps(1) infinite;
-}
-
-@keyframes grain {
-  0%  { transform: translate(0, 0); }
-  10% { transform: translate(-3%, -4%); }
-  20% { transform: translate(-6%, 2%); }
-  30% { transform: translate(4%, -1%); }
-  40% { transform: translate(-2%, 5%); }
-  50% { transform: translate(-5%, -3%); }
-  60% { transform: translate(3%, 4%); }
-  70% { transform: translate(-1%, -6%); }
-  80% { transform: translate(5%, 1%); }
-  90% { transform: translate(-3%, 3%); }
-  100%{ transform: translate(2%, -4%); }
 }
 
 /* ヴィネット */
@@ -77,37 +52,73 @@ body::after {
   inset: 0;
   pointer-events: none;
   z-index: 9998;
-  background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.55) 100%);
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.65) 100%);
 }
 
-::selection {
-  background: var(--accent-subtle);
-  color: var(--text);
+@keyframes grain {
+  0%   { transform: translate(0,0); }
+  10%  { transform: translate(-3%,-4%); }
+  20%  { transform: translate(-6%,2%); }
+  30%  { transform: translate(4%,-1%); }
+  40%  { transform: translate(-2%,5%); }
+  50%  { transform: translate(-5%,-3%); }
+  60%  { transform: translate(3%,4%); }
+  70%  { transform: translate(-1%,-6%); }
+  80%  { transform: translate(5%,1%); }
+  90%  { transform: translate(-3%,3%); }
+  100% { transform: translate(2%,-4%); }
 }
+
+::selection { background: var(--accent-subtle); color: var(--text); }
 
 ::-webkit-scrollbar { width: 2px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--accent-subtle); }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* ── ルール線 ───────────────────────────── */
+.rule {
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+}
+.rule-accent {
+  width: 100%;
+  height: 2px;
+  background: var(--rule-accent);
 }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* ── ラベル ────────────────────────────── */
+.label {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.label-accent {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
 }
 
+/* ── アニメーション ─────────────────────── */
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes revealFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
 @keyframes flicker {
-  0%, 100% { opacity: 1; }
-  92%       { opacity: 1; }
-  93%       { opacity: 0.85; }
-  94%       { opacity: 1; }
-  96%       { opacity: 0.9; }
-  97%       { opacity: 1; }
+  0%,100% { opacity: 1; }
+  92%     { opacity: 1; }
+  93%     { opacity: 0.82; }
+  94%     { opacity: 1; }
+  96%     { opacity: 0.88; }
+  97%     { opacity: 1; }
 }
 
-.fade-in  { animation: fadeIn 0.5s ease forwards; }
-.fade-up  { animation: fadeUp 0.6s ease forwards; }
-.flicker  { animation: flicker 8s infinite; }
+.reveal-up   { animation: revealUp 0.6s cubic-bezier(0.16,1,0.3,1) forwards; }
+.reveal-fade { animation: revealFade 0.8s ease forwards; }
+.flicker     { animation: flicker 10s infinite; }
