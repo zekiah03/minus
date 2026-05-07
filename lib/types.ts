@@ -22,6 +22,8 @@ export interface MinusType {
   name: string;
   description: string;
   trigger: string;
+  positiveCore: string;
+  theoreticalBasis: string;
 }
 
 export type ToleranceLevel = '鈍感域' | '標準域' | '敏感域' | '過敏域';
@@ -29,9 +31,11 @@ export type ToleranceLevel = '鈍感域' | '標準域' | '敏感域' | '過敏�
 export interface Analysis {
   mostSensitive: CategoryScore;
   leastSensitive: CategoryScore;
-  pattern: string;
+  coreDomainReading: string;
+  positiveCoreReading: string;
   level: ToleranceLevel;
   levelDescription: string;
+  levelEthicalNote: string;
 }
 
 export interface DiagnosisResult {
