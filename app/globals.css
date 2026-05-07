@@ -132,6 +132,11 @@ body::after {
   color: var(--accent);
 }
 
+/* リンク・ボタンの label-accent は暗背景でも視認できるよう微かに光らせる */
+a.label-accent, button.label-accent {
+  text-shadow: 0 0 12px rgba(122, 0, 0, 0.7), 0 0 28px rgba(122, 0, 0, 0.3);
+}
+
 /* ── アニメーション ─────────────────── */
 @keyframes revealUp {
   from { opacity: 0; transform: translateY(20px); }
@@ -201,9 +206,20 @@ body::after {
 }
 .scan-text { animation: scanPulse 1.6s ease-in-out infinite; }
 
-.reveal-up   { animation: revealUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards; }
-.reveal-fade { animation: revealFade 1s ease forwards; }
+.reveal-up   { animation: revealUp 0.8s cubic-bezier(0.16,1,0.3,1) both; }
+.reveal-fade { animation: revealFade 1s ease both; }
 .flicker     { animation: flicker 12s infinite; }
+
+/* アニメーション無効環境では即座に表示 */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-up, .reveal-fade, .horror-reveal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .glitch-title, .flicker { animation: none; }
+  .scan-text { animation: none; opacity: 1; }
+}
 
 /* ── セレクション ───────────────────── */
 ::selection { background: var(--accent-subtle); color: var(--text); }

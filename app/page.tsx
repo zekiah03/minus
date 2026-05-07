@@ -4,7 +4,7 @@ export default function Landing() {
   return (
     <main
       className="min-h-screen flex flex-col justify-between px-6 md:px-12 py-10 md:py-14"
-      style={{ position: 'relative', overflow: 'hidden' }}
+      style={{ position: 'relative', overflowX: 'hidden' }}
     >
       {/* 背景の「−」ウォーターマーク */}
       <span
@@ -63,7 +63,7 @@ export default function Landing() {
 
       {/* 下部 CTA */}
       <div
-        style={{ position: 'relative', zIndex: 1, opacity: 0, animationDelay: '0.3s' }}
+        style={{ position: 'relative', zIndex: 1, animationDelay: '0.3s' }}
         className="reveal-fade"
       >
         <div className="rule" />
