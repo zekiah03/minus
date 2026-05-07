@@ -5,45 +5,53 @@ export default function Landing() {
     <main className="flex flex-col min-h-screen px-6 py-16 md:py-0 md:justify-center items-center">
       <div className="w-full max-w-lg fade-in">
 
-        <div className="mb-12 md:mb-16">
+        {/* タイトル */}
+        <div className="mb-14 md:mb-18">
           <h1
-            className="text-8xl md:text-9xl font-bold tracking-tighter leading-none mb-4"
+            className="flicker text-8xl md:text-9xl font-bold tracking-tighter leading-none mb-6 select-none"
             style={{ color: 'var(--text)' }}
           >
             minus
           </h1>
-          <div className="w-12 h-px mb-6" style={{ background: 'var(--accent)' }} />
-          <p className="text-base md:text-lg leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-            何が嫌いか。何を受け付けないか。<br />
-            どこまでのマイナスに耐えられるか。
+          <p
+            className="text-base md:text-lg leading-relaxed font-light"
+            style={{ color: 'var(--text-muted)' }}
+          >
+            「好き」は嘘をつく。<br />
+            「嫌い」だけが、正直だ。
           </p>
         </div>
 
-        <div className="border-l-2 pl-5 mb-12 space-y-3" style={{ borderColor: 'var(--border)' }}>
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-            自分の「好き」より「嫌い」の方が、本質を語ることがある。
+        {/* 説明 */}
+        <div className="space-y-5 mb-12">
+          <p className="text-sm leading-loose" style={{ color: 'var(--text-muted)' }}>
+            何を嫌うか。何が許せないか。どこで折れるか。<br />
+            その輪郭が、あなたの正体だ。
           </p>
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-            5つの領域・全40問の診断を通じて、あなたのマイナス耐性と
-            防衛パターンを可視化します。
+          <p className="text-sm leading-loose" style={{ color: 'var(--text-muted)' }}>
+            5つの領域・全40問の診断があなたのマイナス耐性と
+            防衛パターンの地図を描く。
           </p>
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-dim)' }}>
-            ログイン不要。結果は外部に送信されません。
+          <p className="text-xs" style={{ color: 'var(--text-dim)' }}>
+            ログイン不要。結果は外部に送信されない。
           </p>
         </div>
 
-        <Link
-          href="/intro"
-          className="inline-flex items-center gap-3 px-8 py-4 text-sm font-medium tracking-wide transition-all duration-200 hover:opacity-80"
-          style={{ background: 'var(--accent)', color: 'var(--text)' }}
-        >
-          <span>診断を始める</span>
-          <span className="text-xs opacity-60">→</span>
-        </Link>
+        {/* CTA */}
+        <div className="flex flex-col gap-4">
+          <Link
+            href="/intro"
+            className="inline-flex items-center gap-4 px-8 py-4 text-sm font-medium tracking-widest uppercase transition-all duration-300 hover:opacity-70 w-fit"
+            style={{ background: 'var(--accent)', color: 'var(--text)' }}
+          >
+            <span>診断を始める</span>
+            <span className="text-xs opacity-50">—</span>
+          </Link>
+          <p className="text-xs" style={{ color: 'var(--text-dim)' }}>
+            所要時間 約10〜15分 ／ 全40問
+          </p>
+        </div>
 
-        <p className="mt-6 text-xs" style={{ color: 'var(--text-dim)' }}>
-          所要時間 約10〜15分 ／ 全40問
-        </p>
       </div>
     </main>
   );

@@ -4,20 +4,28 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { CATEGORIES, QUESTIONS, SCALE_LABELS } from '@/lib/questions';
 
-const SCALE_COLORS: Record<number, string> = {
-  1: '#2a2a2a',
-  2: '#2e1e1e',
-  3: '#4a2020',
-  4: '#6a1515',
-  5: '#8b2c2c',
+const SCALE_BG: Record<number, string> = {
+  1: '#0d0606',
+  2: '#1a0808',
+  3: '#3a1010',
+  4: '#5a0e0e',
+  5: '#8b1c1c',
 };
 
-const SCALE_TEXT: Record<number, string> = {
-  1: '#888888',
-  2: '#aa8888',
-  3: '#cc9999',
-  4: '#ddbbbb',
-  5: '#e8e8e8',
+const SCALE_BORDER: Record<number, string> = {
+  1: '#231212',
+  2: '#2e1010',
+  3: '#4a1212',
+  4: '#6a1010',
+  5: '#8b1c1c',
+};
+
+const SCALE_TEXT_COLOR: Record<number, string> = {
+  1: '#7a6666',
+  2: '#aa7777',
+  3: '#cc9090',
+  4: '#ddb0b0',
+  5: '#ddd0d0',
 };
 
 export default function QuizPage() {
@@ -52,139 +60,109 @@ export default function QuizPage() {
   }
 
   const overallPct = (totalAnswered / 40) * 100;
-  const categoryPct = ((questionInCategory + (answered > 0 ? 1 : 0)) / 8) * 100;
 
   return (
     <main className="min-h-screen flex flex-col items-center px-6 py-10">
       <div className="w-full max-w-lg flex flex-col gap-8 fade-in">
 
-        {/* Header */}
+        {/* ヘッダー */}
         <div>
-          <div className="flex items-center justify-between mb-1">
+          <div className="flex items-center justify-between mb-2">
             <span className="text-xs tracking-widest uppercase" style={{ color: 'var(--accent)' }}>
               {category.label}
             </span>
             <span className="text-xs font-mono" style={{ color: 'var(--text-dim)' }}>
-              {current + 1} / 40
+              {current + 1}&thinsp;/&thinsp;40
             </span>
           </div>
-
-          {/* Overall progress */}
-          <div className="h-px w-full mb-3" style={{ background: 'var(--border)' }}>
+          {/* 全体進捗バー */}
+          <div className="h-px w-full" style={{ background: 'var(--border)' }}>
             <div
-              className="h-px transition-all duration-300"
+              className="h-px transition-all duration-500"
               style={{ width: `${overallPct}%`, background: 'var(--accent)' }}
             />
           </div>
-
-          {/* Category progress */}
-          <div className="flex items-center gap-2">
-            <span className="text-xs" style={{ color: 'var(--text-dim)' }}>
-              {category.label} {questionInCategory + 1}/8
-            </span>
-            <div className="flex-1 h-px" style={{ background: 'var(--border)' }}>
-              <div
-                className="h-px transition-all duration-300"
-                style={{ width: `${categoryPct}%`, background: 'var(--surface2)' }}
-              />
-            </div>
-          </div>
         </div>
 
-        {/* Question */}
-        <div
-          key={current}
-          className="py-8 fade-in"
-        >
+        {/* 質問 */}
+        <div key={current} className="py-6 fade-in">
           <p
-            className="text-lg md:text-xl leading-relaxed font-medium"
-            style={{ color: 'var(--text)' }}
+            className="text-lg md:text-xl leading-loose font-light"
+            style={{ color: 'var(--text)', letterSpacing: '0.01em' }}
           >
             {question.text}
           </p>
         </div>
 
-        {/* Scale */}
-        <div className="space-y-2">
+        {/* スケール */}
+        <div className="flex flex-col gap-px">
           {([1, 2, 3, 4, 5] as const).map((score) => {
             const isSelected = answered === score;
             return (
               <button
                 key={score}
                 onClick={() => select(score)}
-                className="w-full flex items-center gap-4 px-5 py-3.5 text-left transition-all duration-150 border"
+                className="w-full flex items-center gap-5 px-5 py-4 text-left transition-all duration-100"
                 style={{
-                  background: isSelected ? SCALE_COLORS[score] : 'var(--surface)',
-                  borderColor: isSelected ? SCALE_COLORS[score] : 'var(--border)',
-                  color: isSelected ? SCALE_TEXT[score] : 'var(--text-muted)',
+                  background: isSelected ? SCALE_BG[score] : 'var(--surface)',
+                  borderLeft: isSelected
+                    ? `2px solid ${SCALE_BORDER[score]}`
+                    : '2px solid transparent',
+                  color: isSelected ? SCALE_TEXT_COLOR[score] : 'var(--text-dim)',
                 }}
               >
-                <span
-                  className="text-xs font-mono w-4 shrink-0"
-                  style={{ color: isSelected ? SCALE_TEXT[score] : 'var(--text-dim)' }}
-                >
+                <span className="text-xs font-mono shrink-0" style={{ color: isSelected ? SCALE_TEXT_COLOR[score] : 'var(--text-dim)' }}>
                   {score}
                 </span>
-                <span className="text-sm">{SCALE_LABELS[score]}</span>
-                {isSelected && (
-                  <span className="ml-auto text-xs opacity-50">✓</span>
-                )}
+                <span className="text-sm tracking-wide">{SCALE_LABELS[score]}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Navigation */}
-        <div className="flex items-center justify-between pt-2">
+        {/* ナビゲーション */}
+        <div className="flex items-center justify-between pt-1">
           <button
             onClick={goPrev}
             disabled={current === 0}
-            className="text-xs px-4 py-2 transition-opacity"
-            style={{
-              color: 'var(--text-dim)',
-              opacity: current === 0 ? 0.3 : 1,
-            }}
+            className="text-xs py-2 transition-opacity"
+            style={{ color: 'var(--text-dim)', opacity: current === 0 ? 0.2 : 0.7 }}
           >
-            ← 前の質問
+            ← 前へ
           </button>
 
           <button
             onClick={goNext}
             disabled={answered === 0}
-            className="px-6 py-3 text-sm font-medium transition-all duration-150"
+            className="px-6 py-3 text-xs font-medium tracking-widest uppercase transition-all duration-150"
             style={{
               background: answered > 0 ? 'var(--accent)' : 'var(--surface2)',
               color: answered > 0 ? 'var(--text)' : 'var(--text-dim)',
-              opacity: answered === 0 ? 0.5 : 1,
+              opacity: answered === 0 ? 0.4 : 1,
               cursor: answered === 0 ? 'not-allowed' : 'pointer',
             }}
           >
-            {current === 39 ? '結果を見る →' : '次の質問 →'}
+            {current === 39 ? '結果を見る' : '次へ'}
           </button>
         </div>
 
-        {/* Category dots */}
-        <div className="flex gap-1.5 justify-center pt-2">
+        {/* 進捗ドット */}
+        <div className="flex gap-2 justify-center pt-1">
           {CATEGORIES.map((cat, i) => {
             const start = i * 8;
-            const catAnswered = answers.slice(start, start + 8).filter((a) => a > 0).length;
             const isCurrent = cat.key === question.category;
             return (
-              <div
-                key={cat.key}
-                className="flex gap-0.5"
-                title={`${cat.label}: ${catAnswered}/8`}
-              >
+              <div key={cat.key} className="flex gap-0.5">
                 {Array.from({ length: 8 }).map((_, j) => (
                   <div
                     key={j}
-                    className="w-1.5 h-1.5 rounded-full transition-all duration-150"
+                    className="w-1 h-1 transition-all duration-200"
                     style={{
                       background:
                         answers[start + j] > 0
                           ? 'var(--accent)'
                           : isCurrent && j === questionInCategory
-                          ? 'var(--text-muted)'
+                          ? '#3d2a2a'
                           : 'var(--border)',
                     }}
                   />
@@ -193,6 +171,7 @@ export default function QuizPage() {
             );
           })}
         </div>
+
       </div>
     </main>
   );

@@ -77,9 +77,9 @@ export const QUESTIONS: Question[] = [
 ];
 
 export const SCALE_LABELS: Record<number, string> = {
-  1: '全く平気',
-  2: '少し気になる',
-  3: 'それなりに嫌',
-  4: 'かなりきつい',
-  5: '絶対に無理',
+  1: '何とも思わない',
+  2: 'わずかに不快',
+  3: '嫌だ',
+  4: '耐えがたい',
+  5: '限界を超える',
 };
