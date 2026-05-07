@@ -14,7 +14,7 @@ export default function Landing() {
           position: 'absolute',
           fontSize: 'clamp(280px, 60vw, 700px)',
           lineHeight: 1,
-          color: 'rgba(122,0,0,0.025)',
+          color: 'rgba(122,0,0,0.022)',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -52%)',
@@ -35,7 +35,7 @@ export default function Landing() {
       {/* タイトル */}
       <div style={{ position: 'relative', zIndex: 1 }} className="py-4 reveal-up">
         <h1
-          className="flicker font-display"
+          className="glitch-title font-display"
           style={{
             fontSize: 'clamp(80px, 21vw, 240px)',
             lineHeight: 0.9,

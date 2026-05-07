@@ -8,6 +8,7 @@ export default function QuizPage() {
   const router = useRouter();
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<number[]>(Array(40).fill(0));
+  const [flash, setFlash] = useState(false);
 
   const question = QUESTIONS[current];
   const catIndex = CATEGORIES.findIndex((c) => c.key === question.category);
@@ -20,6 +21,10 @@ export default function QuizPage() {
     const next = [...answers];
     next[current] = score;
     setAnswers(next);
+    if (score === 5) {
+      setFlash(true);
+      setTimeout(() => setFlash(false), 420);
+    }
   }
 
   function goNext() {
@@ -37,6 +42,20 @@ export default function QuizPage() {
   return (
     <main className="min-h-screen flex flex-col px-6 md:px-12">
 
+      {/* スコア5選択時の赤フラッシュ */}
+      {flash && (
+        <div
+          className="flash-red"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(122,0,0,1)',
+            pointerEvents: 'none',
+            zIndex: 9996,
+          }}
+        />
+      )}
+
       {/* 上部バー */}
       <div className="rule" />
       <div className="flex items-center justify-between py-3 shrink-0">
@@ -51,7 +70,7 @@ export default function QuizPage() {
             height: '1px',
             width: `${progressPct}%`,
             background: 'var(--accent)',
-            boxShadow: '0 0 4px rgba(122,0,0,0.4)',
+            boxShadow: '0 0 6px rgba(122,0,0,0.5)',
             transition: 'width 0.5s ease',
           }}
         />
@@ -60,7 +79,7 @@ export default function QuizPage() {
       {/* 質問エリア */}
       <div className="flex-1 flex flex-col justify-between max-w-xl py-10 md:py-14">
 
-        <div key={current} className="reveal-up relative">
+        <div key={current} className="horror-reveal relative">
           {/* 背景の番号 */}
           <span
             aria-hidden
@@ -110,7 +129,7 @@ export default function QuizPage() {
                       width: '2px',
                       height: '1rem',
                       background: sel ? 'var(--accent)' : 'var(--border)',
-                      boxShadow: sel ? '0 0 4px rgba(122,0,0,0.5)' : 'none',
+                      boxShadow: sel ? '0 0 6px rgba(122,0,0,0.6)' : 'none',
                       flexShrink: 0,
                       transition: 'all 0.1s',
                     }}

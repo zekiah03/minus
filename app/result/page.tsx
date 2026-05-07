@@ -25,10 +25,13 @@ function Row({ label, accent = false, children }: { label: string; accent?: bool
   );
 }
 
+type Phase = 'init' | 'scanning' | 'done';
+
 export default function ResultPage() {
   const router = useRouter();
   const [result, setResult] = useState<DiagnosisResult | null>(null);
-  const [vis, setVis] = useState(false);
+  const [phase, setPhase] = useState<Phase>('init');
+  const [typedName, setTypedName] = useState('');
 
   useEffect(() => {
     const raw = sessionStorage.getItem('minus_answers');
@@ -36,13 +39,50 @@ export default function ResultPage() {
     const answers: number[] = JSON.parse(raw);
     if (answers.length !== 40 || answers.some((a) => a === 0)) { router.replace('/quiz'); return; }
     setResult(computeResult(answers));
-    setTimeout(() => setVis(true), 100);
+    setTimeout(() => setPhase('scanning'), 300);
+    setTimeout(() => setPhase('done'), 2900);
   }, [router]);
 
-  if (!result) {
+  // タイプ名タイプライター
+  useEffect(() => {
+    if (phase !== 'done' || !result) return;
+    const name = result.type.name;
+    let i = 0;
+    const id = setInterval(() => {
+      i++;
+      setTypedName(name.slice(0, i));
+      if (i >= name.length) clearInterval(id);
+    }, 95);
+    return () => clearInterval(id);
+  }, [phase, result]);
+
+  // init フェーズ
+  if (!result || phase === 'init') {
     return (
       <main className="min-h-screen flex items-center justify-center">
         <p className="label" style={{ color: 'var(--text-dim)' }}>——</p>
+      </main>
+    );
+  }
+
+  // scanning フェーズ
+  if (phase === 'scanning') {
+    return (
+      <main className="min-h-screen flex flex-col items-center justify-center gap-10">
+        <p
+          className="label scan-text"
+          style={{ color: 'var(--accent)', letterSpacing: '0.35em' }}
+        >
+          診断中
+        </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: 'center' }}>
+          <p className="label" style={{ color: 'var(--text-dim)', letterSpacing: '0.15em' }}>
+            ——&thinsp;記録を照合している
+          </p>
+          <p className="label" style={{ color: 'var(--text-dim)', opacity: 0.4, letterSpacing: '0.1em' }}>
+            防衛パターンを解析中
+          </p>
+        </div>
       </main>
     );
   }
@@ -51,8 +91,7 @@ export default function ResultPage() {
 
   return (
     <main
-      className="min-h-screen px-6 md:px-12 py-10 md:py-14 max-w-2xl"
-      style={{ opacity: vis ? 1 : 0, transition: 'opacity 0.8s ease' }}
+      className="min-h-screen px-6 md:px-12 py-10 md:py-14 max-w-2xl reveal-up"
     >
 
       {/* ヘッダー */}
@@ -63,21 +102,25 @@ export default function ResultPage() {
       </div>
       <div className="rule-accent" />
 
-      {/* タイプ名 */}
-      <div className="reveal-up" style={{ paddingTop: '3rem', paddingBottom: '2rem' }}>
+      {/* タイプ名 — タイプライター */}
+      <div style={{ paddingTop: '3rem', paddingBottom: '2rem' }}>
         <p className="label" style={{ marginBottom: '1.2rem', color: 'var(--text-dim)' }}>
           あなたは——
         </p>
         <h1
-          className="font-display"
+          className={`font-display${typedName.length >= type.name.length ? ' glitch-title' : ''}`}
           style={{
             fontSize: 'clamp(2.2rem, 9vw, 5.5rem)',
             lineHeight: 1,
             letterSpacing: '-0.02em',
             color: 'var(--text)',
+            minHeight: '1.2em',
           }}
         >
-          {type.name}
+          {typedName}
+          {typedName.length < type.name.length && (
+            <span className="cursor-blink">|</span>
+          )}
         </h1>
       </div>
 
