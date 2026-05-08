@@ -7,6 +7,7 @@ import ScoreBar from '@/components/ScoreBar';
 import ScoreRadar from '@/components/ScoreRadar';
 import { computeResult } from '@/lib/scoring';
 import type { DiagnosisResult } from '@/lib/types';
+import { contributeToTwin } from '@/lib/contribute';
 
 const PROCESS_LOG = [
   '> loading defense matrix...',
@@ -47,12 +48,16 @@ export default function ResultPage() {
     if (!raw) { router.replace('/'); return; }
     const answers: number[] = JSON.parse(raw);
     if (answers.length !== 40 || answers.some((a) => a === 0)) { router.replace('/quiz'); return; }
-    setResult(computeResult(answers));
+    const r = computeResult(answers);
+    setResult(r);
+    if (!sessionStorage.getItem('minus_contributed')) {
+      sessionStorage.setItem('minus_contributed', '1');
+      contributeToTwin('minus', { typeName: r.type.name, totalScore: r.totalScore, level: r.analysis.level });
+    }
     setTimeout(() => setPhase('scanning'), 300);
     setTimeout(() => setPhase('done'), 3200);
   }, [router]);
 
-  // プロセスログ 1行ずつ表示
   useEffect(() => {
     if (phase !== 'scanning') return;
     setLogVisible(0);
@@ -65,7 +70,6 @@ export default function ResultPage() {
     return () => clearInterval(id);
   }, [phase]);
 
-  // タイプ名タイプライター
   useEffect(() => {
     if (phase !== 'done' || !result) return;
     const name = result.type.name;
@@ -130,7 +134,6 @@ export default function ResultPage() {
   return (
     <main className="min-h-screen px-6 md:px-12 py-10 md:py-14 max-w-2xl reveal-up">
 
-      {/* ヘッダー */}
       <div className="rule" />
       <div className="flex items-center justify-between py-3">
         <p className="label-accent">判定</p>
@@ -138,7 +141,6 @@ export default function ResultPage() {
       </div>
       <div className="rule-accent" />
 
-      {/* タイプ名 — タイプライター */}
       <div style={{ paddingTop: '3rem', paddingBottom: '2rem' }}>
         <p className="label" style={{ marginBottom: '1.2rem', color: 'var(--text-dim)' }}>
           あなたは——
@@ -180,7 +182,6 @@ export default function ResultPage() {
         </p>
       </div>
 
-      {/* スコア詳細 */}
       <Row label="Score Radar">
         <ScoreRadar scores={categoryScores} />
       </Row>
@@ -189,14 +190,12 @@ export default function ResultPage() {
         <ScoreBar scores={categoryScores} />
       </Row>
 
-      {/* 核心 */}
       <Row label="核心領域">
         <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.9, fontStyle: 'italic' }}>
           {analysis.coreDomainReading}
         </p>
       </Row>
 
-      {/* 耐性レベル */}
       <Row label={`耐性 — ${analysis.level}`}>
         <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.9, fontStyle: 'italic' }}>
           {analysis.levelDescription}
@@ -206,7 +205,6 @@ export default function ResultPage() {
         </p>
       </Row>
 
-      {/* マイナスの裏面 */}
       <>
         <div className="rule" />
         <div className="py-6">
@@ -226,14 +224,12 @@ export default function ResultPage() {
         <div className="rule-accent" />
       </>
 
-      {/* トリガー */}
       <Row label="Trigger">
         <p className="font-mono-label" style={{ fontSize: '0.62rem', color: 'var(--text-muted)', lineHeight: 1.8 }}>
           {type.trigger}
         </p>
       </Row>
 
-      {/* アクション */}
       <div className="rule" />
       <div className="flex items-center justify-between py-5 flex-wrap gap-4">
         <Link
